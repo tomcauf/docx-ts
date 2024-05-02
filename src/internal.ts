@@ -41,10 +41,6 @@ export function addFiles(
   headerSource: string,
   footerSource: string,
 ) {
-  console.log(htmlSource)
-  console.log(options)
-  console.log(headerSource)
-  console.log(footerSource)
   const documentOptions = mergeOptions(defaultDocumentOptions, options)
   zip.file('[Content_Types].xml', getBinaryData(contentTypesXml))
   zip.folder('_rels')?.file('.rels', getBinaryData(relsXml))

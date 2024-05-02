@@ -1,6 +1,5 @@
 import { addFiles, generateDocument, DocumentOptions } from './internal'
 import JSZip from 'jszip'
-import fs from 'fs'
 
 type asBlobProps = {
   htmlSource: string

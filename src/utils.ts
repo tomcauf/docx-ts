@@ -4,10 +4,8 @@ import { footerTemplate, headerTemplate, mhtDocumentTemplate, mhtPartTemplate } 
 import { footerXmlRels, footerXmlRelsProps, headerXmlRels, headerXmlRelsProps } from './assets'
 
 export function getMHTdocument(htmlSource: string) {
-  console.log(htmlSource)
   const ref = _prepareImageParts(htmlSource)
   const imageContentPartsString = ref.imageContentParts.join('\n')
-  console.log(ref.htmlSource)
   htmlSource = ref.htmlSource.replace(/\=/g, '=3D')
   return mhtDocumentTemplate(htmlSource, imageContentPartsString)
 }
