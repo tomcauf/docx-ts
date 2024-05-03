@@ -4,4 +4,4 @@ export const documentXmlRels = `<?xml version=\"1.0\" encoding=\"UTF-8\" standal
     Target=\"/word/afchunk.mht\" Id=\"htmlChunk\" />
     <Relationship Id="rId6" Target="header1.xml" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/header"/>
     <Relationship Id="rId7" Target="footer1.xml" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer"/>
-</Relationships>`
+</Relationships>`;

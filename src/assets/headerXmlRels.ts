@@ -1,7 +1,7 @@
 export type headerXmlRelsProps = {
-  id: string
-  target: string
-}[]
+  id: string;
+  target: string;
+}[];
 
 export const headerXmlRels = (props: headerXmlRelsProps) => {
   return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -12,6 +12,6 @@ ${props
     Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image"
     Target="media/${prop.target}" />`,
   )
-  .join('\n')}
-</Relationships>`
-}
+  .join("\n")}
+</Relationships>`;
+};

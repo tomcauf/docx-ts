@@ -6,21 +6,26 @@ export const defaultMargins: Margins = {
   header: 720,
   footer: 720,
   gutter: 0,
-}
+};
 
 export type Margins = {
-  top?: number
-  right?: number
-  bottom?: number
-  left?: number
-  header?: number
-  footer?: number
-  gutter?: number
-}
+  top?: number;
+  right?: number;
+  bottom?: number;
+  left?: number;
+  header?: number;
+  footer?: number;
+  gutter?: number;
+};
 
-export type Orient = 'landscape' | 'portrait'
+export type Orient = "landscape" | "portrait";
 
-export const documentTemplate = (width: number, height: number, orient: Orient, margins: Margins) => {
+export const documentTemplate = (
+  width: number,
+  height: number,
+  orient: Orient,
+  margins: Margins,
+) => {
   return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
   <w:document
     xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
@@ -42,5 +47,5 @@ export const documentTemplate = (width: number, height: number, orient: Orient, 
       </w:sectPr>
     </w:body>
   </w:document>
-`
-}
+`;
+};

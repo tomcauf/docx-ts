@@ -5,4 +5,4 @@ export const contentTypesXml = `<?xml version="1.0" encoding="UTF-8" standalone=
   <Override PartName="/word/afchunk.mht" ContentType="message/rfc822"/>
   <Override PartName="/word/header1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.header+xml" />
   <Override PartName="/word/footer1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml" />
-</Types>`
+</Types>`;

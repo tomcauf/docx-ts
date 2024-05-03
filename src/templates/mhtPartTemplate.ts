@@ -10,5 +10,5 @@ Content-Transfer-Encoding: ${contentEncoding}
 Content-Location: ${contentLocation}
 
 ${encodedContent}
-`
-}
+`;
+};
