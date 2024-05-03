@@ -52,10 +52,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tomcauf/htmldocxts.git"
+    "url": "git+https://github.com/tomcauf/docx-ts.git"
   },
   "bugs": {
-    "url": "https://github.com/tomcauf/htmldocxts/issues"
+    "url": "https://github.com/tomcauf/docx-ts/issues"
   },
   "keywords": [
     "html",
