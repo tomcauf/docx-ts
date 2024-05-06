@@ -13,6 +13,7 @@ import {
   headerXmlRelsProps,
 } from "./assets";
 import { HeaderFooterProps } from "./internal";
+let currentId = 1;
 
 export function getMHTdocument(htmlSource: string) {
   const ref = _prepareImageParts(htmlSource);
@@ -31,28 +32,34 @@ export function getHeader({
   const refLeft = _prepareImagePartsXML(
     headerSource?.leftSideSource || "",
     zip,
+    currentId,
   );
+  currentId = refLeft.currentId;
   const refCenter = _prepareImagePartsXML(
     headerSource?.centerSource || "",
     zip,
+    currentId,
   );
+  currentId = refCenter.currentId;
   const refRight = _prepareImagePartsXML(
     headerSource?.rightSideSource || "",
     zip,
+    currentId,
   );
+  currentId = refRight.currentId;
   const rels: headerXmlRelsProps = [];
   const imageRels = new Map();
   refLeft.imageRels.forEach((key, value) => {
-    rels.push({ id: value, target: key });
-    imageRels.set(key, value);
+    rels.push({ id: key, target: value });
+    imageRels.set(value, key);
   });
   refCenter.imageRels.forEach((key, value) => {
-    rels.push({ id: value, target: key });
-    imageRels.set(key, value);
+    rels.push({ id: key, target: value });
+    imageRels.set(value, key);
   });
   refRight.imageRels.forEach((key, value) => {
-    rels.push({ id: value, target: key });
-    imageRels.set(key, value);
+    rels.push({ id: key, target: value });
+    imageRels.set(value, key);
   });
 
   zip.file("word/_rels/header1.xml.rels", headerXmlRels(rels));
@@ -76,28 +83,34 @@ export function getFooter({
   const refLeft = _prepareImagePartsXML(
     footerSource?.leftSideSource || "",
     zip,
+    currentId,
   );
+  currentId = refLeft.currentId;
   const refCenter = _prepareImagePartsXML(
     footerSource?.centerSource || "",
     zip,
+    currentId,
   );
+  currentId = refCenter.currentId;
   const refRight = _prepareImagePartsXML(
     footerSource?.rightSideSource || "",
     zip,
+    currentId,
   );
+  currentId = refRight.currentId;
   const rels: footerXmlRelsProps = [];
   const imageRels = new Map();
   refLeft.imageRels.forEach((key, value) => {
-    rels.push({ id: value, target: key });
-    imageRels.set(key, value);
+    rels.push({ id: key, target: value });
+    imageRels.set(value, key);
   });
   refCenter.imageRels.forEach((key, value) => {
-    rels.push({ id: value, target: key });
-    imageRels.set(key, value);
+    rels.push({ id: key, target: value });
+    imageRels.set(value, key);
   });
   refRight.imageRels.forEach((key, value) => {
-    rels.push({ id: value, target: key });
-    imageRels.set(key, value);
+    rels.push({ id: key, target: value });
+    imageRels.set(value, key);
   });
   zip.file("word/_rels/footer1.xml.rels", footerXmlRels(rels));
   return footerTemplate({
@@ -139,10 +152,14 @@ function _prepareImageParts(htmlSource: string) {
   return { htmlSource, imageContentParts };
 }
 
-function _prepareImagePartsXML(htmlSource: string, zip: JSZip) {
+function _prepareImagePartsXML(
+  htmlSource: string,
+  zip: JSZip,
+  currentId: number,
+) {
   const imageRels: Map<string, string> = new Map();
   const inlinedSrcPattern = /"data:(\w+\/\w+);(\w+),(\S+)"/g;
-  let matchIndex = 1;
+  let matchIndex = currentId;
 
   const inlinedReplacer = (
     match: string,
@@ -166,5 +183,5 @@ function _prepareImagePartsXML(htmlSource: string, zip: JSZip) {
 
   htmlSource = htmlSource.replace(inlinedSrcPattern, inlinedReplacer);
 
-  return { htmlSource, imageRels };
+  return { htmlSource, imageRels, currentId: matchIndex };
 }

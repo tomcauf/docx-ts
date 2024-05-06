@@ -62,19 +62,35 @@ function xmlElement(node: Node, imageRels: Map<string, string>) {
     const element = node as HTMLElement;
     switch (element.tagName.toLowerCase()) {
       case "strong":
-        xmlString += `<w:r><w:rPr><w:b/></w:rPr><w:t>${element.textContent}</w:t></w:r>`;
+        xmlString += getStrongText(element.textContent || "");
         break;
       case "img":
-        const src = element.getAttribute("src");
-        if (!src) break;
+        xmlString += getImageElement(element, imageRels);
+        break;
+      default:
+        xmlString += `<w:r><w:t>${element.textContent}</w:t></w:r>`;
+        break;
+    }
+  } else {
+    console.log("[DOCX-TS] Unknow Node in your HEADER or FOOTER : ", node);
+  }
+  return xmlString;
+}
 
-        const rId = imageRels.get(src);
-        if (!rId) break;
-        const wImage: number =
-          parseInt(element.getAttribute("width") || "142", 10) * 9525;
-        const hImage: number =
-          parseInt(element.getAttribute("height") || "57", 10) * 9525;
-        xmlString += `
+function getStrongText(text: string) {
+  return `<w:r><w:rPr><w:b/></w:rPr><w:t>${text}</w:t></w:r>`;
+}
+
+function getImageElement(element: HTMLElement, imageRels: Map<string, string>) {
+  const src = element.getAttribute("src");
+  if (!src) return "";
+  const rId = imageRels.get(src);
+  if (!rId) return "";
+  const wImage: number =
+    parseInt(element.getAttribute("width") || "142", 10) * 9525;
+  const hImage: number =
+    parseInt(element.getAttribute("height") || "57", 10) * 9525;
+  return `
           <w:r>
             <w:drawing>
             <wp:inline distT="0" distB="0" distL="0" distR="0">
@@ -108,15 +124,6 @@ function xmlElement(node: Node, imageRels: Map<string, string>) {
             </wp:inline>
             </w:drawing>
           </w:r>`;
-        break;
-      default:
-        xmlString += `<w:r><w:t>${element.textContent}</w:t></w:r>`;
-        break;
-    }
-  } else {
-    console.log("[DOCX-TS] Unknow Node in your HEADER or FOOTER : ", node);
-  }
-  return xmlString;
 }
 
 export const headerTemplate = ({
