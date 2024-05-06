@@ -88,6 +88,9 @@ const exportDocx = () => {
 };
 ```
 
+**How to have page numbering :** :
+The library takes page numbering into account. For simple numbering, you can use {PAGE_NUM}, otherwise you can write {PAGE_NUM}/{TOTAL_PAGES} to get the numbering with the total of pages.
+
 ## Collaboration
 
 Don't hesitate to collaborate on the project! I created it for my end-of-study internship, and I'm glad the lib can help. So don't hesitate to be curious!

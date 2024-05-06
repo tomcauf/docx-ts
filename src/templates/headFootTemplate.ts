@@ -8,15 +8,21 @@ function pageNumbersTemplate(pageNum: string) {
     </w:r>
     <w:r><w:fldChar w:fldCharType="end" /></w:r>`;
   } else if (pageNum === "{PAGE_NUM}/{TOTAL_PAGES}") {
-    return `<w:r><w:fldChar w:fldCharType="begin" /></w:r>
-    <w:r>
-      <w:instrText>PAGE \* MERGEFORMAT</w:instrText>
-    </w:r>
-    <w:r><w:fldChar w:fldCharType="separate" /></w:r>
-    <w:r>
-      <w:instrText>NUMPAGES \* MERGEFORMAT</w:instrText>
-    </w:r>
-    <w:r><w:fldChar w:fldCharType="end" /></w:r>`;
+    return `
+    <w:p>
+      <w:r><w:fldChar w:fldCharType="begin" /></w:r>
+      <w:r>
+        <w:instrText>PAGE \* MERGEFORMAT</w:instrText>
+      </w:r>
+      <w:r><w:fldChar w:fldCharType="end" /></w:r>
+      <w:r><w:t>/</w:t></w:r>
+      <w:r><w:fldChar w:fldCharType="begin" /></w:r>
+      <w:r>
+        <w:instrText>NUMPAGES \* MERGEFORMAT</w:instrText>
+      </w:r>
+      <w:r><w:fldChar w:fldCharType="end" /></w:r>
+    </w:p>
+    `;
   } else {
     return "";
   }
