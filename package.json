@@ -1,6 +1,6 @@
 {
   "name": "docx-ts",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Convert HTML documents to docx format with header and footer.",
   "author": {
     "name": "Tom CAUFRIER",

@@ -9,7 +9,6 @@ function pageNumbersTemplate(pageNum: string) {
     <w:r><w:fldChar w:fldCharType="end" /></w:r>`;
   } else if (pageNum === "{PAGE_NUM}/{TOTAL_PAGES}") {
     return `
-    <w:p>
       <w:r><w:fldChar w:fldCharType="begin" /></w:r>
       <w:r>
         <w:instrText>PAGE \* MERGEFORMAT</w:instrText>
@@ -21,7 +20,6 @@ function pageNumbersTemplate(pageNum: string) {
         <w:instrText>NUMPAGES \* MERGEFORMAT</w:instrText>
       </w:r>
       <w:r><w:fldChar w:fldCharType="end" /></w:r>
-    </w:p>
     `;
   } else {
     return "";
@@ -47,10 +45,6 @@ function htmlToOpenXml({
     xmlString += "</w:p>";
   });
 
-  if (xmlString === "") {
-    xmlString += pageNumbersTemplate(htmlSource || "");
-  }
-
   return xmlString;
 }
 
@@ -68,7 +62,14 @@ function xmlElement(node: Node, imageRels: Map<string, string>) {
         xmlString += getImageElement(element, imageRels);
         break;
       default:
-        xmlString += `<w:r><w:t>${element.textContent}</w:t></w:r>`;
+        if (
+          element.textContent === "{PAGE_NUM}" ||
+          element.textContent === "{PAGE_NUM}/{TOTAL_PAGES}"
+        ) {
+          xmlString += pageNumbersTemplate(element.textContent);
+        } else {
+          xmlString += `<w:r><w:t>${element.textContent}</w:t></w:r>`;
+        }
         break;
     }
   } else {

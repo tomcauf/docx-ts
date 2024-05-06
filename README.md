@@ -72,8 +72,8 @@ const exportDocx = () => {
 
   const footerSource: {
     leftSideSource: "<p>Page</p>",
-    centerSource: "{PAGE_NUM}",
-    rightSideSource: "{PAGE_NUM}/{TOTAL_PAGES}",
+    centerSource: "<p>{PAGE_NUM}</p>",
+    rightSideSource: "<p>{PAGE_NUM}/{TOTAL_PAGES}</p>",
   };
 
   asBlob({
