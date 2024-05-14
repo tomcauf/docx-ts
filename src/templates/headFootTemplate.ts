@@ -42,7 +42,7 @@ function htmlToOpenXml({
     p.childNodes.forEach((node) => {
       xmlString += xmlElement(node, imageRels);
     });
-    xmlString += "</w:p>";
+    xmlString += "</w:p> ";
   });
 
   return xmlString;
@@ -68,7 +68,7 @@ function xmlElement(node: Node, imageRels: Map<string, string>) {
         ) {
           xmlString += pageNumbersTemplate(element.textContent);
         } else {
-          xmlString += `<w:r><w:t>${element.textContent}</w:t></w:r>`;
+          xmlString += `<w:r><w:t xml:space="preserve">${element.textContent}</w:t></w:r>`;
         }
         break;
     }
@@ -134,6 +134,11 @@ export const headerTemplate = ({
   headerSource?: HeaderFooterProps;
   imageRels: Map<string, string>;
 }) => {
+  const headerWidth = 5000;
+  const partOfHeaderWidth = Math.floor(
+    headerWidth / (headerSource?.centerSource ? 3 : 2),
+  );
+  console.log("partOfHeaderWidth", partOfHeaderWidth);
   return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
   <w:hdr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
          xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
@@ -143,13 +148,13 @@ export const headerTemplate = ({
     <w:tbl>
     <w:tblPr>
       <w:tblStyle w:val="TableGrid"/>
-      <w:tblW w:w="5000" w:type="pct"/>
+      <w:tblW w:w="${headerWidth}" w:type="pct"/>
       <w:tblLook w:val="04A0"/>
     </w:tblPr>
     <w:tr>
       <w:tc>
         <w:tcPr>
-          <w:tcW w:w="1666" w:type="pct"/>
+          <w:tcW w:w="${partOfHeaderWidth}" w:type="pct"/>
         </w:tcPr>
         <w:p>
           <w:pPr>
@@ -160,22 +165,26 @@ export const headerTemplate = ({
           </w:r>
         </w:p>
       </w:tc>
+     ${
+       partOfHeaderWidth !== headerWidth / 2
+         ? ` <w:tc>
+      <w:tcPr>
+        <w:tcW w:w="${partOfHeaderWidth}" w:type="pct"/>
+      </w:tcPr>
+      <w:p>
+        <w:pPr>
+          <w:jc w:val="center"/>
+        </w:pPr>
+        <w:r>
+        ${htmlToOpenXml({ htmlSource: headerSource?.centerSource, imageRels })}
+        </w:r>
+      </w:p>
+    </w:tc>`
+         : ""
+     }
       <w:tc>
         <w:tcPr>
-          <w:tcW w:w="1666" w:type="pct"/>
-        </w:tcPr>
-        <w:p>
-          <w:pPr>
-            <w:jc w:val="center"/>
-          </w:pPr>
-          <w:r>
-          ${htmlToOpenXml({ htmlSource: headerSource?.centerSource, imageRels })}
-          </w:r>
-        </w:p>
-      </w:tc>
-      <w:tc>
-        <w:tcPr>
-          <w:tcW w:w="1666" w:type="pct"/>
+          <w:tcW w:w="${partOfHeaderWidth}" w:type="pct"/>
         </w:tcPr>
         <w:p>
           <w:pPr>
@@ -199,6 +208,11 @@ export const footerTemplate = ({
   footerSource?: HeaderFooterProps;
   imageRels: Map<string, string>;
 }) => {
+  const footerWidth = 5000;
+  const partOfFooterWidth = Math.floor(
+    footerWidth / (footerSource?.centerSource ? 3 : 2),
+  );
+  console.log("partOfFooterWidth", partOfFooterWidth);
   return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
   <w:ftr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
        xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
@@ -208,13 +222,13 @@ export const footerTemplate = ({
        <w:tbl>
        <w:tblPr>
          <w:tblStyle w:val="TableGrid"/>
-         <w:tblW w:w="5000" w:type="pct"/>
+         <w:tblW w:w="${footerWidth}" w:type="pct"/>
          <w:tblLook w:val="04A0"/>
        </w:tblPr>
        <w:tr>
          <w:tc>
            <w:tcPr>
-             <w:tcW w:w="1666" w:type="pct"/>
+             <w:tcW w:w="${partOfFooterWidth}" w:type="pct"/>
            </w:tcPr>
            <w:p>
              <w:pPr>
@@ -225,22 +239,26 @@ export const footerTemplate = ({
              </w:r>
            </w:p>
          </w:tc>
+         ${
+           partOfFooterWidth !== footerWidth / 2
+             ? `<w:tc>
+            <w:tcPr>
+              <w:tcW w:w="${partOfFooterWidth}" w:type="pct"/>
+            </w:tcPr>
+            <w:p>
+              <w:pPr>
+                <w:jc w:val="center"/>
+              </w:pPr>
+              <w:r>
+              ${htmlToOpenXml({ htmlSource: footerSource?.centerSource, imageRels })}
+              </w:r>
+            </w:p>
+          </w:tc>`
+             : ""
+         }
          <w:tc>
            <w:tcPr>
-             <w:tcW w:w="1666" w:type="pct"/>
-           </w:tcPr>
-           <w:p>
-             <w:pPr>
-               <w:jc w:val="center"/>
-             </w:pPr>
-             <w:r>
-             ${htmlToOpenXml({ htmlSource: footerSource?.centerSource, imageRels })}
-             </w:r>
-           </w:p>
-         </w:tc>
-         <w:tc>
-           <w:tcPr>
-             <w:tcW w:w="1666" w:type="pct"/>
+             <w:tcW w:w="${partOfFooterWidth}" w:type="pct"/>
            </w:tcPr>
            <w:p>
              <w:pPr>
