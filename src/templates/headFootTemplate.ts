@@ -1,29 +1,61 @@
 import { HeaderFooterProps } from "../internal";
 
-function pageNumbersTemplate(pageNum: string) {
+function pageNumbersTemplate(
+  pageNum: string,
+  style?: { fontSize?: string; fontFamily?: string },
+) {
+  let xmlString = "";
   if (pageNum === "{PAGE_NUM}") {
-    return `<w:r><w:fldChar w:fldCharType="begin" /></w:r>
-    <w:r>
-      <w:instrText>PAGE \* MERGEFORMAT</w:instrText>
-    </w:r>
-    <w:r><w:fldChar w:fldCharType="end" /></w:r>`;
+    xmlString = `<w:r>
+                    <w:rPr>
+                      ${style?.fontFamily ? `<w:rFonts w:ascii="${style.fontFamily}" w:hAnsi="${style.fontFamily}" />` : ""}
+                      ${style?.fontSize ? `<w:sz w:val="${style.fontSize}" />` : ""}
+                    </w:rPr>
+                    <w:fldChar w:fldCharType="begin" />
+                  </w:r>
+                  <w:r>
+                    <w:rPr>
+                      ${style?.fontFamily ? `<w:rFonts w:ascii="${style.fontFamily}" w:hAnsi="${style.fontFamily}" />` : ""}
+                      ${style?.fontSize ? `<w:sz w:val="${style.fontSize}" />` : ""}
+                    </w:rPr>
+                    <w:instrText>PAGE \* MERGEFORMAT</w:instrText>
+                  </w:r>
+                  <w:r><w:fldChar w:fldCharType="end" /></w:r>`;
   } else if (pageNum === "{PAGE_NUM}/{TOTAL_PAGES}") {
-    return `
-      <w:r><w:fldChar w:fldCharType="begin" /></w:r>
+    xmlString = `
       <w:r>
+        <w:rPr>
+          ${style?.fontFamily ? `<w:rFonts w:ascii="${style.fontFamily}" w:hAnsi="${style.fontFamily}" />` : ""}
+          ${style?.fontSize ? `<w:sz w:val="${style.fontSize}" />` : ""}
+        </w:rPr>
+        <w:fldChar w:fldCharType="begin" /></w:r>
+      <w:r>
+        <w:rPr>
+          ${style?.fontFamily ? `<w:rFonts w:ascii="${style.fontFamily}" w:hAnsi="${style.fontFamily}" />` : ""}
+          ${style?.fontSize ? `<w:sz w:val="${style.fontSize}" />` : ""}
+        </w:rPr>
         <w:instrText>PAGE \* MERGEFORMAT</w:instrText>
       </w:r>
       <w:r><w:fldChar w:fldCharType="end" /></w:r>
-      <w:r><w:t>/</w:t></w:r>
+      <w:r>
+        <w:rPr>
+          ${style?.fontFamily ? `<w:rFonts w:ascii="${style.fontFamily}" w:hAnsi="${style.fontFamily}" />` : ""}
+          ${style?.fontSize ? `<w:sz w:val="${style.fontSize}" />` : ""}
+        </w:rPr>
+      <w:t>/</w:t>
+      </w:r>
       <w:r><w:fldChar w:fldCharType="begin" /></w:r>
       <w:r>
+        <w:rPr>
+          ${style?.fontFamily ? `<w:rFonts w:ascii="${style.fontFamily}" w:hAnsi="${style.fontFamily}" />` : ""}
+          ${style?.fontSize ? `<w:sz w:val="${style.fontSize}" />` : ""}
+        </w:rPr>
         <w:instrText>NUMPAGES \* MERGEFORMAT</w:instrText>
       </w:r>
       <w:r><w:fldChar w:fldCharType="end" /></w:r>
     `;
-  } else {
-    return "";
   }
+  return xmlString;
 }
 
 function htmlToOpenXml({
@@ -54,6 +86,17 @@ function xmlElement(node: Node, imageRels: Map<string, string>) {
     xmlString += `<w:r><w:t>${node.textContent}</w:t></w:r>`;
   } else if (node.nodeType === Node.ELEMENT_NODE) {
     const element = node as HTMLElement;
+    const style = element.getAttribute("style");
+    const fontFamily = style
+      ?.match(/font-family:\s*([^;]+)/)?.[1]
+      .replace(/['"]/g, "");
+    const fontSize = style
+      ?.match(/font-size:\s*(\d+)(px|pt)?/g)
+      ?.pop()
+      ?.match(/\d+/)?.[0];
+    const fontSizeInHalfPoints = fontSize
+      ? `${parseFloat(fontSize) * 2}`
+      : "18";
     switch (element.tagName.toLowerCase()) {
       case "strong":
         xmlString += getStrongText(element.textContent || "");
@@ -66,9 +109,18 @@ function xmlElement(node: Node, imageRels: Map<string, string>) {
           element.textContent === "{PAGE_NUM}" ||
           element.textContent === "{PAGE_NUM}/{TOTAL_PAGES}"
         ) {
-          xmlString += pageNumbersTemplate(element.textContent);
+          xmlString += pageNumbersTemplate(element.textContent, {
+            fontSize: fontSizeInHalfPoints,
+            fontFamily: fontFamily,
+          });
         } else {
-          xmlString += `<w:r><w:t xml:space="preserve">${element.textContent}</w:t></w:r>`;
+          xmlString += `<w:r>
+                          <w:rPr>
+                            ${fontFamily ? `<w:rFonts w:ascii="${fontFamily}" w:hAnsi="${fontFamily}" />` : ""}
+                            ${fontSize ? `<w:sz w:val="${fontSizeInHalfPoints}" />` : ""}
+                          </w:rPr>
+                          <w:t xml:space="preserve">${element.textContent}</w:t>
+                        </w:r>`;
         }
         break;
     }
@@ -138,7 +190,6 @@ export const headerTemplate = ({
   const partOfHeaderWidth = Math.floor(
     headerWidth / (headerSource?.centerSource ? 3 : 2),
   );
-  console.log("partOfHeaderWidth", partOfHeaderWidth);
   return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
   <w:hdr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
          xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
@@ -212,7 +263,6 @@ export const footerTemplate = ({
   const partOfFooterWidth = Math.floor(
     footerWidth / (footerSource?.centerSource ? 3 : 2),
   );
-  console.log("partOfFooterWidth", partOfFooterWidth);
   return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
   <w:ftr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
        xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
