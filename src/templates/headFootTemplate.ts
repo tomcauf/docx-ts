@@ -111,7 +111,7 @@ function xmlElement(node: Node, imageRels: Map<string, string>) {
         ) {
           xmlString += pageNumbersTemplate(element.textContent, {
             fontSize: fontSizeInHalfPoints,
-            fontFamily: fontFamily,
+            fontFamily,
           });
         } else {
           xmlString += `<w:r>
